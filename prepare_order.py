@@ -89,23 +89,118 @@ a.	Leer cada archivo en formato csv: Utilizar una instancia de la clase 'CSVFile
 2)	Convertir a listas de objetos:
 a.	Convertir cajeros: Función creada por el alumno  
 b.	Convertir clientes: Función creada por el alumno 
-c.	Convertir productos: Función creada por el alumno 
+c.	Convertir productos: Función creada por el alumno
+
 3)	Preparar Orden:
 a.	Buscar cajero por dni: Función creada por el alumno y debe devolver una instancia de tipo cajero.
 b.	Buscar cliente por dni. Función creada por el alumno y debe devolver una instancia de tipo cliente.
 c.	Inicializar Orden: Utilizar una instancia la clase 'Order', e inicializar con su constructor por defecto.
 d.	Mostrar productos a vender: Función creada por el alumno.
 e.	Escoger productos: Función creada por el alumno.
+
 f.	Agregar productos: Utilizar la instancia la clase 'Order', del paso c y llamar al método 'add()'.
 4)	Mostrar Orden: Utilizar la instancia la clase 'Order', del paso c y llamar al método 'show()'
 
 
 """
-#Write your code here
-from users import *
+# Write your code here
+from util.file_manager import cargar_datos
+from orders.order import Order
+from products.product import Product
 
-    
-class PrepareOrder:
- #Write your code here
- pass
 
+def seleccionar_cajero(cajeros):
+    print("\n\n*********************    Cajeros Disponibles")
+    for cajero in cajeros:
+        print(cajero.describe())
+    bucle_de_ok = True
+    while bucle_de_ok is True:
+        dni_entrado = input("Entra el DNI del cajero seleccionado\
+            o * para cancelar: ")
+        if dni_entrado == "*":
+            exit()
+        dni_en_lista_bucle = False
+        for cajero in cajeros:
+            if str(cajero.dni) == dni_entrado:
+                dni_en_lista_bucle = True
+                bucle_de_ok = False
+                print("Ha seleccionado: ", cajero.describe())
+                break
+        print("el DNI no existe,....") if dni_en_lista_bucle is False else None
+    return cajero  # instancia del cajero seleccionado
+
+
+def seleccionar_cliente(clientes):
+    print("\n\n*********************     Clientes Activos: ")
+    for cliente in clientes:
+        print(cliente.describe())
+    bucle_de_ok = True
+    while bucle_de_ok is True:
+        dni_entrado = input("Entra el DNI del cliente seleccionado\
+            o * para cancelar: ")
+        if dni_entrado == "*":
+            exit()
+        dni_en_lista_bucle = False
+        for cliente in clientes:
+            if str(cliente.dni) == dni_entrado:
+                dni_en_lista_bucle = True
+                bucle_de_ok = False
+                print("Ha seleccionado : ", cliente.describe())
+                break
+        print("el DNI no existe,....")\
+            if dni_en_lista_bucle is False else None
+    return cliente  # instancia del cliente seleccionado
+
+
+def mostrar_productos(productos):
+    print("\n\n*********************     productos disponibles: ")
+    for producto in productos:
+        print(producto.describe())
+
+
+def seleccionar_producto(productos):
+    bucle_de_ok = True
+    while bucle_de_ok is True:
+        id_entrado = input("Entra el id del producto seleccionado o *\
+                           para cancelar, o <enter> para realizar pedido: ")
+        if id_entrado == "*":
+            exit()
+        if len(id_entrado) == 0:
+            bucle_de_ok = False
+            return
+        id_en_lista_bucle = False
+        for producto in productos:
+            if str(producto.id) == id_entrado:
+                id_en_lista_bucle = True
+                bucle_de_ok = False
+                print("Ha seleccionado : ", producto.describe())
+                break
+        if id_en_lista_bucle is False:
+            print("el id del producto no existe,....")
+    return producto  # instancia del producto seleccionado
+
+
+def seleccionar_varios_productos(productos):
+    while True:
+        producto = seleccionar_producto(productos)
+        if not isinstance(producto, Product):
+            break
+        orden.add(producto)
+    return
+
+
+def PrepareOrder():
+    # Write your code here
+    cajeros, clientes, productos = cargar_datos()  # cargar los datos
+    cajero = seleccionar_cajero(cajeros)  # instancia del cajero seleccionado
+    cliente = seleccionar_cliente(clientes)  # instancia cliente seleccionado
+    global orden
+    orden = Order(cajero, cliente)  # se inicializa la orden
+    mostrar_productos(productos)  # Muestra los articulos disponibles
+    print(seleccionar_varios_productos(productos))
+    print("\n\n*********************     Esta es la Order creada: ")
+    orden.show()  # muestra la orden creada
+
+
+if __name__ == "__main__":
+    PrepareOrder()
