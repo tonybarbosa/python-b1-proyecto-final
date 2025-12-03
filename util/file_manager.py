@@ -24,29 +24,56 @@ class CSVFileManager:
 
 
 def cargar_datos():
-    cashiers = CSVFileManager('./data/cashiers.csv').read()
-    cajeros = CashierConverter().convert(cashiers)
+    errores = False
+    try:
+        cashiers = CSVFileManager('./data/cashiers.csv').read()
+        cajeros = CashierConverter().convert(cashiers)
+    except:
+        print("Error cargando cajeros, fichero no encontrado")
+        errores = True
 
-    customers = CSVFileManager('./data/customers.csv').read()
-    clientes = CustomerConverter().convert(customers)
+    try:
+        customers = CSVFileManager('./data/customers.csv').read()
+        clientes = CustomerConverter().convert(customers)
+    except:
+        print("Error cargando clientes, fichero no encontrado")
+        errores = True
 
-    drinks = CSVFileManager('./data/drinks.csv').read()
-    bebidas = DrinkConverter().convert(drinks)
+    try:
+        drinks = CSVFileManager('./data/drinks.csv').read()
+        bebidas = DrinkConverter().convert(drinks)
+    except:
+        print("Error cargando bebidaS, fichero no encontrado")
+        errores = True
+    
+    try:
+        sodas = CSVFileManager('./data/sodas.csv').read()
+        gaseosas = SodaConverter().convert(sodas)
+    except:
+        print("Error cargando gaseosa, fichero no encontrado")
+        errores = True
 
-    sodas = CSVFileManager('./data/sodas.csv').read()
-    gaseosas = SodaConverter().convert(sodas)
+    try:
+        hamburgers = CSVFileManager('./data/hamburgers.csv').read()
+        hamburguesas = HamburgerConverter().convert(hamburgers)
+    except:
+        print("Error cargando hamburguesas, fichero no encontrado")
+        errores = True
 
-    hamburgers = CSVFileManager('./data/hamburgers.csv').read()
-    hamburguesas = HamburgerConverter().convert(hamburgers)
-
-    happyMeals = CSVFileManager('./data/happyMeal.csv').read()
-    comidasFelices = HappyMealConverter().convert(happyMeals)
+    try:
+        happyMeals = CSVFileManager('./data/happyMeal.csv').read()
+        comidasFelices = HappyMealConverter().convert(happyMeals)
+    except:
+        print("Error cargando happy meals, fichero no encontrado")
+        errores = True
 
     # Fusionar las lista de cada producto en una sola lista
-
+    if errores is True:
+        return [], [], [], True
+    
     productos = bebidas.copy()
     productos.extend(gaseosas)
     productos.extend(hamburguesas)
     productos.extend(comidasFelices)
 
-    return cajeros, clientes, productos
+    return cajeros, clientes, productos, errores

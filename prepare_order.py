@@ -180,24 +180,25 @@ def seleccionar_producto(productos):
     return producto  # instancia del producto seleccionado
 
 
-def seleccionar_varios_productos(productos):
+def seleccionar_varios_productos(orden,productos):
     while True:
         producto = seleccionar_producto(productos)
         if not isinstance(producto, Product):
             break
         orden.add(producto)
-    return
-
+    return orden
 
 def PrepareOrder():
     # Write your code here
-    cajeros, clientes, productos = cargar_datos()  # cargar los datos
+    cajeros, clientes, productos, errores = cargar_datos()  # cargar los datos
+    if errores:
+        print("Se produjeron errores al cargar los datos. No se puede continuar.")
+        return
     cajero = seleccionar_cajero(cajeros)  # instancia del cajero seleccionado
     cliente = seleccionar_cliente(clientes)  # instancia cliente seleccionado
-    global orden
     orden = Order(cajero, cliente)  # se inicializa la orden
     mostrar_productos(productos)  # Muestra los articulos disponibles
-    print(seleccionar_varios_productos(productos))
+    orden = seleccionar_varios_productos(orden,productos)
     print("\n\n*********************     Esta es la Order creada: ")
     orden.show()  # muestra la orden creada
 
